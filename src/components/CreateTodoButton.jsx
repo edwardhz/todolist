@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const CreateTodoButton = () => {
+const CreateTodoButton = ({setModal}) => {
   const onClickButton = ()=>{
-    alert('modal');
+    setModal(prevState => !prevState);
   }
 
   return (
@@ -16,6 +16,7 @@ const CreateTodoButton = () => {
   )
 }
 const ButtonAdd = styled.input`
+  z-index: 1;
   padding: 1rem 1rem;
   position: absolute;
   bottom: -30px;

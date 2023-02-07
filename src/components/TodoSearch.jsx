@@ -1,13 +1,12 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
+import {AppContext} from 'context/AppContext'
+const TodoSearch = () => {
 
-const TodoSearch = ({ search, setSearch}) => {
+  const{search, setSearch} = useContext(AppContext)
 
   const onSearchValueChange = (event)=>{
    setSearch(event.target.value)
-  
   }
-
-
   return (
     <>
       <input placeholder='..'

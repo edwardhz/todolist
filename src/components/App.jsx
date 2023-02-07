@@ -1,72 +1,73 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect, useContext} from 'react';
 import TodoCounter from 'components/TodoCounter'
 import TodoSearch from 'components/TodoSearch'
+import TodoForm from 'components/TodoForm'
 import TodoList from 'components/TodoList'
 import TodoItem from 'components/TodoItem'
 import CreateTodoButton from 'components/CreateTodoButton'
 import styled from 'styled-components'
+import {TodoProvider,AppContext} from 'context/AppContext'
+import Modal from 'components/Modal'
+import ContentLoader from "react-content-loader"
+
+
 
 const App = () => {
-  
-  const DefaultTodos = [
-    {text:'Cut onions', completed:true},
-    {text:'Wash onions', completed:false},
-    {text:'Cook onions', completed:false},
-  ]
 
-  const [search, setSearch] = useState('');
-  const [todos, setTodos] = useState(DefaultTodos);
+  const {loading,
+    error,
+    search,
+    setSearch,
+    searchedTodos,
+    completeTodo,
+    deleteTodo,
+    todos,
+    saveTodos,
+    modal,
+    setModal
+  } = useContext(AppContext);
 
-  let searchedTodos = [];
-
-  if(!search>=1){
-    searchedTodos=todos;
-  }else{
-    searchedTodos = todos.filter(todo=>{
-      const todoText = todo.text.toLowerCase();
-      const searchText = search.toLocaleLowerCase();
-      return todoText.includes(searchText);
-
-    })
-  }
-
-  const completeTodo = (text)=>{
-    const todoIndex = todos.findIndex(todo => todo.text === text);
-    const newTodos = [...todos];
-    newTodos[todoIndex].completed = !newTodos[todoIndex].completed;
-    setTodos(newTodos);
-  }
-  const deleteTodo = (text)=>{
-    const todoIndex = todos.findIndex(todo => todo.text === text);
-    const newTodos = [...todos];
-    newTodos.splice(todoIndex, 1);
-    setTodos(newTodos);
-  }
-
-
-
-  
   return (
     <>
-      <Wrapper>
-        <h1 className='H1Task'>Task manager</h1>
-        <TodoCounter 
-        todos={todos}
-        />
-        <TodoSearch 
-        search={search}
-        setSearch={setSearch}
-        />
-        <TodoList>
-          {searchedTodos.map((todo)=>(
-            <TodoItem todo={todo} key={todo.text}
-            onComplete={() => completeTodo(todo.text)}
-            onDelete={() => deleteTodo(todo.text)}
-            />
-          ))}
-        </TodoList>
-        <CreateTodoButton/>
-      </Wrapper>
+    <Wrapper>
+      <h1 className='H1Task'>Task manager</h1>
+          <TodoCounter 
+          />
+          <TodoSearch
+          />
+          <TodoList>
+            {loading &&
+            <>
+             <ContentLoader
+                viewBox="0 0 400 160"
+                height={100}
+                width={300}
+                backgroundColor="#F55D3E"
+              >
+                <circle cx="150" cy="86" r="8" />
+                <circle cx="194" cy="86" r="8" />
+                <circle cx="238" cy="86" r="8" />
+              </ContentLoader>
+            </>
+            }
+            {(todos.length < 1 && !loading) && <p>Agrega tu primer todo</p>}
+            {error && <p>Hubo un error</p>}
+            {searchedTodos.map((todo)=>(
+              <TodoItem todo={todo} key={todo.text}
+              onComplete={() => (completeTodo(todo.text))}
+              onDelete={() => deleteTodo(todo.text)}
+              />
+            ))}
+          </TodoList>
+          {modal && (
+            <Modal>
+              <TodoForm/>
+            </Modal>
+          )}
+      <CreateTodoButton 
+        setModal={setModal}
+      />
+    </Wrapper>    
     </>
   )
 }
