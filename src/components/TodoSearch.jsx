@@ -1,17 +1,25 @@
 import React from 'react'
-const TodoSearch = ({search, setSearch}) => {
+import styled from 'styled-components'
+const TodoSearch = ({search, setSearch,loading}) => {
 
   const onSearchValueChange = (event)=>{
    setSearch(event.target.value)
   }
   return (
     <>
-      <input placeholder='..'
+      <InputSearch placeholder='You search..'
       onChange={onSearchValueChange}
       value={search}
+      className={`${loading && 'active'}`}
       />
     </>
   )
 }
+
+const InputSearch = styled.input`
+  &.active{
+    opacity: 0.5;
+  }
+`
 
 export default TodoSearch

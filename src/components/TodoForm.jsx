@@ -1,12 +1,10 @@
 import React, { useContext, useState } from 'react'
 import styled from 'styled-components'
-import {AppContext} from 'context/AppContext'
 
-const TodoForm = () => {
+
+const TodoForm = ({addTodo,setModal}) => {
 
     const [textArea,setTextArea] = useState('');
-
-    const {addTodo,setModal} = useContext(AppContext);
 
     const onCancel = () =>{
         setModal(prevState => !prevState)
